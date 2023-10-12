@@ -1,0 +1,5 @@
+package com.brelequin.pruebadeconceptos.model;
+
+public class RequestReporter {
+
+}

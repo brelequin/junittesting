@@ -1,0 +1,13 @@
+package com.brelequin.pruebadeconceptos;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class PruebadeconceptosApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(PruebadeconceptosApplication.class, args);
+	}
+
+}

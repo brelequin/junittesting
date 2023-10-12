@@ -1,0 +1,39 @@
+package com.brelequin.pruebadeconceptos.services;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import mx.openpay.report.client.ReportServiceClient;
+import mx.openpay.report.client.ReportServiceRestClient;
+import mx.openpay.report.configuration.ReportServiceConfig;
+
+
+@Service
+public class ReportService {
+	
+	@Value("${cognito.server}")
+	private String cognitoServer;
+	
+	@Value("${cognito.user}")
+	private String cognitoUser;
+
+	@Value("${cognito.password}")
+	private String cognitoPassword;
+	
+	@Value("${kms.key,id}")
+	private String kmsId;
+
+	public ReportService() {
+		
+	}
+	
+	//@Singleton
+	public ReportServiceClient getReportServiceClient() {
+    	return new ReportServiceRestClient(ReportServiceConfig.builder()
+            	.cognitoServer(cognitoServer)
+            	.cognitoUser(cognitoUser)
+            	.cognitoPassword(cognitoPassword)
+            	.kmsKeyId(kmsId)
+            	.build());
+	}
+}

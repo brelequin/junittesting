@@ -1,0 +1,11 @@
+package com.brelequin.pruebadeconceptos.services;
+
+import org.springframework.stereotype.Service;
+import mx.openpay.report.client.ReportServiceClient;
+import mx.openpay.report.client.ReportServiceRestClient;
+
+
+@Service
+public class ReportService {
+
+}

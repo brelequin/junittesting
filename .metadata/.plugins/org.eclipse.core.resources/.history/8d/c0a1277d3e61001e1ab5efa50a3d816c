@@ -1,0 +1,14 @@
+package mx.openpay.payments.report.constants;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class ReportServiceClientConstants {
+    public static final String LINK_EXP_DATE_FORMAT = "dd/MM/yyyy HH:mm";
+    public static final String FILENAME_DATE_FORMAT = "yyyyMMdd-HHmmss";
+
+
+   
+    private ReportServiceClientConstants(){}
+}

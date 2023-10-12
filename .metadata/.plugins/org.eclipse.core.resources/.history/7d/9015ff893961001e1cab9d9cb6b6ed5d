@@ -1,0 +1,10 @@
+logging.level.web=debug
+logging.level.org.springframework=debug
+server.port=8081
+
+
+cognito.server=abcd
+cognito.user=abcd
+cognito.password=abcd
+kms.key.id=abcd
+application.code=2342

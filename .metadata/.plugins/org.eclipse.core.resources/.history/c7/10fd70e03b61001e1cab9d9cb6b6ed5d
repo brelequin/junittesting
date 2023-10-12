@@ -1,0 +1,147 @@
+package mx.openpay.payments.report.services;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.TimeZone;
+
+import org.apache.http.client.utils.DateUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import static mx.openpay.payments.report.constants.ReportServiceClientConstants.*;
+import mx.openpay.payments.report.dto.CountryConfigDTO;
+import mx.openpay.payments.report.dto.report.CsvReportDTO;
+import mx.openpay.report.client.ReportServiceClient;
+import mx.openpay.report.exception.ReportServiceClientException;
+import mx.openpay.report.request.Filter;
+import mx.openpay.report.request.MailCredentialRequest;
+import mx.openpay.report.request.MailRecipient;
+import mx.openpay.report.request.MailTemplate;
+import mx.openpay.report.request.ReportRequest;
+import mx.openpay.report.request.S3Settings;
+import mx.openpay.report.response.ReportResponse;
+import mx.openpay.report.util.FileType;
+import mx.openpay.report.util.Plugin;
+import mx.openpay.report.util.Separator;
+
+@Service
+public class PaymentReportService {
+	
+
+    @Value("${reporter-service.s3.bucket}")
+    private String s3Bucket;
+    @Value("${reporter-service.s3.path}")
+    private String s3Path;
+    @Value("${reporter-service.template.bucket}")
+    private String templateBucket;
+    @Value("${reporter-service.template.path}")
+    private String templatePath;
+    @Value("${reporter-service.app.code}")
+    private String applicationCode;
+
+    private final ReportServiceClient reportServiceClient;
+    private final CountryConfigService countryConfigService;
+    private final DateFormat df = new SimpleDateFormat(LINK_EXP_DATE_FORMAT);
+    private final DateFormat fileNameDf = new SimpleDateFormat(FILENAME_DATE_FORMAT);
+
+    public PaymentReportService(ReportServiceClient reportServiceClient, CountryConfigService countryConfigService) {
+        this.reportServiceClient = reportServiceClient;
+        this.countryConfigService = countryConfigService;
+    }
+
+    public Optional<CsvReportDTO> requestReport(PaymentReportRequestDTO reportRequest) throws ReportServiceClientException, JsonProcessingException {
+        if(Objects.isNull(reportRequest.getMerchantId())){
+            log.error("Merchant id required to export csv");
+            return Optional.of(new CsvReportDTO(false));
+        }
+        ReportTypeParam reportTypeParam = ReportTypeParam.get(reportRequest.getReportType());
+        if(reportTypeParam == null){
+            return Optional.of(new CsvReportDTO(false));
+        }
+        String username = QueryStringDecoder.decodeComponent(reportRequest.getUsername());
+        Optional<User> userOptional = userService.findByUsername(username);
+        if(!userOptional.isPresent()){
+            log.error("User not found: {}", userOptional);
+            return Optional.of(new CsvReportDTO(false));
+        }
+        ReportRequest request = getReportRequest(reportRequest, userOptional.get().getUsername(), userOptional.get().getName(), reportTypeParam);
+        ReportResponse reportResponse = reportServiceClient.generateReport(request);
+        log.info("Reporter Service Response: {}", reportResponse);
+        return Optional.of(new CsvReportDTO(reportResponse.getFile(), reportResponse.getMessage(), true));
+    }
+
+    private ReportRequest getReportRequest(PaymentReportRequestDTO reportRequest, String email, String name, ReportTypeParam reportTypeParam){
+        CountryConfigDTO countryConfig = countryConfigService.getCountryConfig(reportRequest.getCountry());
+        Filter filter = getReportFilter(email, reportRequest, reportTypeParam, countryConfig.getTimezone());
+        S3Settings s3Settings = getS3Settings(reportRequest, reportTypeParam, countryConfig.getTimezone());
+        MailCredentialRequest mailCredentialRequest =
+                getReportEmail(reportRequest, email, name, countryConfig.getMailServerPrefix(), reportTypeParam);
+
+        return ReportRequest.builder()
+                .keycodeBd(countryConfig.getReporterServiceDB())
+                .pluginName(Plugin.DYNAMIC)
+                .filter(filter)
+                .fileType(FileType.CSV)
+                .separator(Separator.COMMA)
+                .s3CredentialRequest(s3Settings)
+                .mailCredentialRequest(mailCredentialRequest)
+                .build();
+    }
+
+    private Filter getReportFilter(String email, PaymentReportRequestDTO reportRequest, ReportTypeParam reportTypeParam, String timezone){
+        df.setTimeZone(TimeZone.getTimeZone(timezone));
+        return Filter.builder()
+                .titleTemplate(reportTypeParam.getTitle())
+                .descriptionTemplate(DESCRIPTION)
+                .footerTemplateText(df.format(DateUtils.addDays(new Date(), 1)))
+                .email(email)
+                .queryStatement(getQuery(reportRequest, reportTypeParam))
+                .merchantId(reportRequest.getMerchantId())
+                .applicationCode(applicationCode)
+                .build();
+    }
+
+    private S3Settings getS3Settings(PaymentReportRequestDTO reportRequest, ReportTypeParam reportTypeParam, String timezone){
+        fileNameDf.setTimeZone(TimeZone.getTimeZone(timezone));
+        return S3Settings.builder()
+                .bucket(s3Bucket)
+                .path(s3Path)
+                .fileName(fileNameDf.format(new Date())+"-"+reportTypeParam.getFileName()
+                        +"_"+formatMonth(reportRequest.getMonth())+"_"+reportRequest.getYear())
+                .build();
+    }
+
+    private MailCredentialRequest getReportEmail(PaymentReportRequestDTO reportRequest, String email, String name, String msPrefix, ReportTypeParam reportTypeParam){
+
+        List<MailRecipient> mailRecipients = new ArrayList<>();
+        mailRecipients.add(MailRecipient.builder()
+                .email(email)
+                .name(name).build());
+
+        MailTemplate mailTemplate = MailTemplate.builder()
+                .bucketName(templateBucket)
+                .name(templatePath).build();
+
+        return MailCredentialRequest.builder()
+                .to(mailRecipients)
+                .subject(reportTypeParam.getSubject()+" "+formatMonth(reportRequest.getMonth())+"/"+reportRequest.getYear())
+                .template(mailTemplate)
+                .prefix(msPrefix)
+                .build();
+    }
+
+private String getQuery(){
+       final String MY_QUERY = "SELECT * FROM TRANSACTIONS t ORDER BY t.ID_TRANSACTION DESC LIMIT 5;"; 
+   return  MY_QUERY;
+}
+
+
+}

@@ -1,0 +1,21 @@
+INDEX VERSION 1.131
+C:\Users\brenda.l.quintanilla\Documents\workspaces\junittesting\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2975035075.index
+\pruebadeconceptos\src\main\java
+C:\Users\brenda.l.quintanilla\Documents\workspaces\junittesting\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1308470446.index
+\pruebadeconceptos\src\main\java
+C:\Users\brenda.l.quintanilla\Documents\workspaces\junittesting\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2025451107.index
+\payments-report-api\src\main\java
+C:\Users\brenda.l.quintanilla\Documents\workspaces\junittesting\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2364299727.index
+\pruebadeconceptos\src\main\java
+C:\Users\brenda.l.quintanilla\Documents\workspaces\junittesting\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\775447411.index
+\payments-report-api\src\main\java
+C:\Users\brenda.l.quintanilla\Documents\workspaces\junittesting\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1856035735.index
+\pruebadeconceptos\src\main\java
+C:\Users\brenda.l.quintanilla\Documents\workspaces\junittesting\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3901470865.index
+\pruebadeconceptos\src\main\java
+C:\Users\brenda.l.quintanilla\Documents\workspaces\junittesting\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3393669427.index
+\payments-report-api\src\main\java
+C:\Users\brenda.l.quintanilla\Documents\workspaces\junittesting\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1026570536.index
+\pruebadeconceptos\src\main\java
+C:\Users\brenda.l.quintanilla\Documents\workspaces\junittesting\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1626041031.index
+\pruebadeconceptos\src\main\java

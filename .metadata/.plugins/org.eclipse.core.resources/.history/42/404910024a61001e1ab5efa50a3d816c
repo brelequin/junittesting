@@ -1,0 +1,43 @@
+package mx.openpay.paymentreport.dto;
+
+//import io.micronaut.core.annotation.Nullable;
+//import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+//import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
+
+//@Schema(description = "Clase que recibe los datos para solicitar un reporte de pagos")
+@Data
+public class PaymentReportRequestDTO implements Serializable {
+
+
+
+  //  @Schema(description = "Merchant público")
+   // @NotBlank
+    private String merchantId;
+    
+    private String reportType;
+
+	public String getMerchantId() {
+		return merchantId;
+	}
+
+	public void setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+	}
+
+	public void setReportType(String reportType) {
+		this.reportType = reportType;
+	}
+
+	public String getReportType() {
+		// TODO Auto-generated method stub
+		return this.reportType;
+	}
+    
+    
+
+    
+
+}

@@ -1,0 +1,12 @@
+package mx.openpay.payments.report.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@AllArgsConstructor
+@Data
+public class CountryConfigDTO {
+    private String reporterServiceDB;
+    private String mailServerPrefix;
+    private String timezone;
+}

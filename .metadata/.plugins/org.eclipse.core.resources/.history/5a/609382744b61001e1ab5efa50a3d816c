@@ -1,0 +1,94 @@
+package mx.openpay.paymentreport;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+import mx.openpay.report.client.ReportServiceRestClient;
+import mx.openpay.report.configuration.ReportServiceConfig;
+import mx.openpay.report.exception.ReportServiceClientException;
+import mx.openpay.report.request.Filter;
+import mx.openpay.report.request.MailCredentialRequest;
+import mx.openpay.report.request.MailRecipient;
+import mx.openpay.report.request.MailTemplate;
+import mx.openpay.report.request.ReportRequest;
+import mx.openpay.report.request.S3Settings;
+import mx.openpay.report.response.ReportResponse;
+import mx.openpay.report.util.Database;
+import mx.openpay.report.util.FileType;
+import mx.openpay.report.util.Plugin;
+import mx.openpay.report.util.Separator;
+
+public class PaymentReportServiceTest {
+	@Test
+	public void test_generateDynamicReport(){
+
+	 Filter filter = Filter.builder()
+	 .titleTemplate("Ultimas 5 Transacciones de Desarrollo")
+	 .descriptionTemplate("Muestra de las últimas 5 transacciones de desarrollo")
+	 .footerTemplateText("Derechos Openpay")
+	 .email("nestor.gonzalez@openpay.mx")
+	 .queryStatement("SELECT * FROM TRANSACTIONS t ORDER BY t.ID_TRANSACTION DESC LIMIT 5")
+	 .applicationCode("FEES_API")
+	 .merchantId("m1uzezivrdjvvmk2ehs3")
+	 .build();
+
+	 S3Settings s3Settings = S3Settings.builder()
+	 .bucket("reporteria-bucket-dev")
+	 .path("DYNAMIC")
+	 .build();
+
+	 List<MailRecipient> mailRecipients = new ArrayList<>();
+	 mailRecipients.add(MailRecipient.builder()
+	 .email("nestor.gonzale@openpay.mx")
+	 .name("Néstor Daniel González García").build());
+	 mailRecipients.add(MailRecipient.builder()
+	 .email("nestor.gonzalez.garcia@gmail.com")
+	 .name("Néstor Daniel González García").build());
+
+	 MailTemplate mailTemplate = MailTemplate.builder()
+	 .bucketName("mail-server-resources")
+	 .name("DEVELOP/report-dynamic-plugin/mail-templates/OUTPUT_REPORT_DYNAMIC.htm").build();
+
+	 MailCredentialRequest mailCredentialRequest = MailCredentialRequest.builder()
+	 .to(mailRecipients)
+	 .subject("Reporte - Queries Dinámicos")
+	 .template(mailTemplate)
+	 .prefix("mx")
+	 .build();
+
+	 ReportRequest reportRequest = ReportRequest.builder()
+	 .keycodeBd(Database.MX_CO)
+	 .pluginName(Plugin.DYNAMIC)
+	 .filter(filter)
+	 .fileType(FileType.CSV)
+	 .separator(Separator.COMMA)
+	 .s3CredentialRequest(s3Settings)
+	 .mailCredentialRequest(mailCredentialRequest)
+	 .build();
+
+	 ReportServiceRestClient client = new ReportServiceRestClient(getConfig());
+	 try {
+
+	 System.out.println(">> --------------- QUERY STATEMENT --------------------------------------------------");
+	 System.out.println("Filter: " + reportRequest.getFilter());
+	 System.out.println("queryStatement: " + reportRequest.getFilter().get("queryStatement"));
+	 System.out.println("<< --------------- QUERY STATEMENT --------------------------------------------------");
+
+	 ReportResponse reportResponse = client.generateReport(reportRequest);
+
+	 System.out.println(">> --------------- RESPONSE ---------------------------------------------------------");
+	 System.out.println(reportResponse);
+	 System.out.println("<< --------------- RESPONSE ---------------------------------------------------------");
+
+	 } catch (ReportServiceClientException e) {
+	 e.printStackTrace();
+	 }
+	}
+
+	private ReportServiceConfig getConfig() {
+
+		return null;
+	}
+}

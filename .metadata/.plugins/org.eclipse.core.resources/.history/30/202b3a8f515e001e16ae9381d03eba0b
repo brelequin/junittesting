@@ -1,0 +1,9 @@
+package com.brelequin.pruebadeconceptos.model;
+
+public class Template {
+	
+	private String bucketName;
+	private String name;
+	private String prefix;
+
+}

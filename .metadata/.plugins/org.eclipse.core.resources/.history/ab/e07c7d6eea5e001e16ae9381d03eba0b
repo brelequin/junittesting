@@ -1,0 +1,133 @@
+package com.brelequin.pruebadeconceptos.services;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.brelequin.pruebadeconceptos.model.PayoutReportRequestDTO;
+import com.brelequin.pruebadeconceptos.model.ReportRequest2;
+
+import mx.openpay.report.client.ReportServiceClient;
+import mx.openpay.report.client.ReportServiceRestClient;
+import mx.openpay.report.configuration.ReportServiceConfig;
+import mx.openpay.report.request.Filter;
+import mx.openpay.report.request.MailCredentialRequest;
+import mx.openpay.report.request.MailRecipient;
+import mx.openpay.report.request.MailTemplate;
+import mx.openpay.report.request.ReportRequest;
+import mx.openpay.report.request.S3Settings;
+import mx.openpay.report.util.FileType;
+import mx.openpay.report.util.Plugin;
+
+
+@Service
+public class ReportService {
+	
+	@Value("${cognito.server}")
+	private String cognitoServer;
+	
+	@Value("${cognito.user}")
+	private String cognitoUser;
+
+	@Value("${cognito.password}")
+	private String cognitoPassword;
+	
+	@Value("${kms.key.id}")
+	private String kmsId;
+	
+	@Value("${application.code}")
+	private String applicationCode;
+
+	public ReportService() {
+		
+	}
+	
+	//@Singleton
+	public ReportServiceClient getReportServiceClient() {
+    	return new ReportServiceRestClient(ReportServiceConfig.builder()
+            	.cognitoServer(cognitoServer)
+            	.cognitoUser(cognitoUser)
+            	.cognitoPassword(cognitoPassword)
+            	.kmsKeyId(kmsId)
+            	.build());
+	}
+	
+	
+	private ReportRequest getReportRequest(ReportRequest2 reportRequest, String email, String name){
+		
+		   
+		   Filter filter = getReportFilter(reportRequest, email);
+		   S3Settings s3Settings = getS3Settings();
+		   MailCredentialRequest mailCredentialRequest =
+		           getReportEmail(email, name);
+
+
+		   return ReportRequest.builder()
+		           .keycodeBd(reportRequest.getKeycodeBd())
+		           .pluginName(Plugin.DYNAMIC)
+		           .filter(filter)
+		           .fileType(FileType.CSV)
+		           .separator(",")
+		           .s3CredentialRequest(s3Settings)
+		           .mailCredentialRequest(mailCredentialRequest)
+		           .build();
+		}
+
+
+private Filter getReportFilter(ReportRequest2 reportRequest, String email){
+
+    String title = "My title";
+
+   // df.setTimeZone(TimeZone.getTimeZone(timezone));
+return Filter.builder()
+       .titleTemplate(title)
+    //   .descriptionTemplate(String.format(null)) not required
+     //  .footerTemplateText(df.format(DateUtils.addDays(new Date(), 1))) not required
+       .email(email)
+       .queryStatement(getQuery())
+       .merchantId(reportRequest.getMerchantId())
+       .applicationCode(applicationCode)
+       .build();
+
+}
+
+private S3Settings getS3Settings(){
+
+    String filename = "My file name";
+
+    return S3Settings.builder()
+            .bucket(null)
+            .path(null)
+            .fileName(filename)
+            .build();
+}
+
+private MailCredentialRequest getReportEmail( String email, String name){
+
+    String subject = "My subject";
+    List<MailRecipient> mailRecipients = new ArrayList<>();
+    mailRecipients.add(MailRecipient.builder()
+            .email(email)
+            .name(name).build());
+
+    MailTemplate mailTemplate = MailTemplate.builder()
+            .bucketName(null)
+            .name(null).build();
+
+    return MailCredentialRequest.builder()
+            .to(mailRecipients)
+            .subject(subject)
+            .template(mailTemplate)
+            .prefix("mx")
+            .build();
+}
+
+private String getQuery(){
+       final String MY_QUERY = "SELECT * FROM TRANSACTIONS t ORDER BY t.ID_TRANSACTION DESC LIMIT 5;"; 
+   return  MY_QUERY;
+}
+
+
+}

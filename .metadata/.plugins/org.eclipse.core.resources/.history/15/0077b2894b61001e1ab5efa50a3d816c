@@ -1,0 +1,4 @@
+reporter-service.s3.bucket=
+reporter-service.s3.path=
+reporter-service.template.path=
+reporter-service.app.code=

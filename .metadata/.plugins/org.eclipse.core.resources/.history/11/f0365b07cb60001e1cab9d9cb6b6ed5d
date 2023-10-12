@@ -1,0 +1,70 @@
+package com.brelequin.pruebadeconceptos.model;
+
+import java.util.List;
+import java.util.Map;
+
+public class MailCredentialRequest {
+
+	private List<GroupEmail> to;
+	private String subject;
+	private Template template;
+	private Map<String,String> context;
+	private String accountAttachments;
+	private String prefix;
+	
+	public MailCredentialRequest() {
+	}
+	
+	
+	public List<GroupEmail> getTo() {
+		return to;
+	}
+	public void setTo(List<GroupEmail> to) {
+		this.to = to;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public Template getTemplate() {
+		return template;
+	}
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+
+
+	public Map<String, String> getContext() {
+		return context;
+	}
+
+
+	public void setContext(Map<String, String> context) {
+		this.context = context;
+	}
+
+
+	public String getAccountAttachments() {
+		return accountAttachments;
+	}
+
+
+	public void setAccountAttachments(String accountAttachments) {
+		this.accountAttachments = accountAttachments;
+	}
+
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+	
+	
+
+}

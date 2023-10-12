@@ -1,0 +1,4 @@
+logging.level.web=debug
+#Convierte los json que tienen _ en objetos sin espacios
+spring.jackson.property-naming-strategy=SNAKE_CASE
+

@@ -1,0 +1,38 @@
+package com.brelequin.pruebadeconceptos.model;
+
+import java.util.List;
+
+public class MailCredentialRequest {
+
+	private List<GroupEmail> to;
+	private String subject;
+	
+	
+	
+	public MailCredentialRequest() {
+	}
+	
+	
+	public List<GroupEmail> getTo() {
+		return to;
+	}
+	public void setTo(List<GroupEmail> to) {
+		this.to = to;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public Template getTemplate() {
+		return template;
+	}
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+	private Template template;
+	
+	
+
+}

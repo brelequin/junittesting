@@ -1,0 +1,39 @@
+package mx.openpay.merchant.fee.dto.report;
+
+import io.micronaut.core.annotation.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
+
+@Schema(description = "Clase que recibe los datos para solicitar un reporte de comisiones")
+@Data
+public class FeeReportRequestDTO implements Serializable {
+
+    @Schema(description = "Usuario logeado")
+    private String username;
+
+    @Schema(description = "Merchant público")
+    @NotBlank
+    private String merchantId;
+
+    @Schema(description = "Tipo de reporte")
+    private String reportType;
+
+    @Schema(description = "Pais")
+    private String country;
+
+    @Schema(description = "Year")
+    private Integer year;
+
+    @Schema(description = "Month")
+    private Integer month;
+
+    @Schema(description = "Estatus de pago")
+    private Boolean status;
+
+    @Schema(description = "El idMonthly")
+    @Nullable
+    private String monthlyId;
+}

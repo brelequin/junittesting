@@ -1,0 +1,40 @@
+package com.brelequin.pruebadeconceptos.model;
+
+public class Template {
+	
+	private String account;
+	private String bucketName;
+	private String name;
+	
+	public Template() {
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getBucketName() {
+		return bucketName;
+	}
+
+	public void setBucketName(String bucketName) {
+		this.bucketName = bucketName;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
+	
+	
+
+}

@@ -1,0 +1,41 @@
+package mx.openpay.payments.report.dto.report;
+
+public class CsvReportDTO {
+    private String file;
+    private String message;
+    private boolean success;
+
+    public CsvReportDTO(String file, String message, boolean success) {
+        this.file = file;
+        this.message = message;
+        this.success = success;
+    }
+
+    public CsvReportDTO(boolean success) {
+        this.success = success;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="mx.openpay.report.request.Filter"/>
+    <fullyQualifiedTypeName name="mx.openpay.report.request.MailCredentialRequest"/>
+    <fullyQualifiedTypeName name="mx.openpay.report.util.Plugin"/>
+    <fullyQualifiedTypeName name="org.springframework.boot.autoconfigure.security.SecurityProperties.User"/>
+    <fullyQualifiedTypeName name="java.util.Optional"/>
+    <fullyQualifiedTypeName name="org.apache.http.client.utils.DateUtils"/>
+    <fullyQualifiedTypeName name="java.util.Date"/>
+    <fullyQualifiedTypeName name="com.fasterxml.jackson.core.JsonProcessingException"/>
+    <fullyQualifiedTypeName name="mx.openpay.report.util.Separator"/>
+    <fullyQualifiedTypeName name="mx.openpay.payments.report.constants.ReportServiceClientConstants"/>
+    <fullyQualifiedTypeName name="mx.openpay.payments.report.dto.PaymentReportRequestDTO"/>
+</qualifiedTypeNameHistroy>

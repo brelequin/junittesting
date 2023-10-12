@@ -1,0 +1,36 @@
+package com.brelequin.pruebadeconceptos.model;
+
+import java.util.List;
+
+public class S3CredentialRequest {
+	private String bucket;
+	private String path;
+	private String fileName;
+	
+	public S3CredentialRequest() {}
+	
+	public String getBucket() {
+		return bucket;
+	}
+	public void setBucket(String bucket) {
+		this.bucket = bucket;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	
+	
+
+}

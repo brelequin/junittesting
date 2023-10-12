@@ -1,0 +1,51 @@
+package mx.openpay.merchant.fee.enums.report;
+
+import lombok.Getter;
+
+public enum ReportTypeParam {
+
+    MOCH("La lista de cargos mensuales se generó exitosamente.",
+          "Lista de Cargos Mensuales",
+          "Lista_Cargos_Mensuales"),
+
+    TFR("La lista de transacciones con comisiones devueltas se generó exitosamente.",
+            "Lista de Transacciones con Comisiones Devueltas",
+            "Lista_Transacciones_Comisiones_Devueltas"),
+
+    TFC("La lista de transacciones con comisiones cobradas se generó exitosamente.",
+          "Lista de Transacciones con Comisiones Cobradas",
+          "Lista_Transacciones_Comisiones_Cobradas");
+
+
+    @Getter
+    private String title;
+    @Getter
+    private String subject;
+    @Getter
+    private String fileName;
+
+    private ReportTypeParam(String title, String subject, String fileName){
+        this.title = title;
+        this.subject = subject;
+        this.fileName = fileName;
+    }
+
+    /**
+     * Obtiene ReportTypeParam de acuerdo al tipo de reporte
+     * @param reportType tipo de reporte a filtrar
+     * @return un {@link ReportTypeParam}
+     */
+    public static ReportTypeParam get(String reportType) {
+        if (reportType == null) {
+            return null;
+        }
+
+        String reportTypeName = reportType.toUpperCase();
+
+        try {
+            return ReportTypeParam.valueOf(reportTypeName);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+}

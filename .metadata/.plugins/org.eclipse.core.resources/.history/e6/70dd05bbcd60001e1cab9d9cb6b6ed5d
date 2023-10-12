@@ -1,0 +1,120 @@
+package mx.openpay.merchant.fee.constants;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class ReportServiceClientConstants {
+    public static final String LINK_EXP_DATE_FORMAT = "dd/MM/yyyy HH:mm";
+    public static final String FILENAME_DATE_FORMAT = "yyyyMMdd-HHmmss";
+    public static final String DESCRIPTION = "El enlace de descarga expira el: ";
+
+    public static final String MAIL_PREFIX = "mx";
+
+    public static final String QUERY_MONTHLY_CHARGE = "SELECT CASE WHEN mfp.PAID = 1 THEN 'PAGADO' ELSE 'POR_COBRAR' END AS estatus, " +
+            "mi2.RFC AS rfc, m.NAME AS comercio, mfp.`YEAR` AS anio, mfp.`MONTH` AS mes, " +
+            "IFNULL(sum(mfp.CHARGED_FEES), 0) AS monto_comision, IFNULL(sum(mfp.CHARGED_TAXES), 0) AS iva_comision, " +
+            "IFNULL(sum(mfp.REFUNDED_FEES), 0) AS monto_reembolso, IFNULL(sum(mfp.REFUNDED_TAXES), 0) AS iva_reembolso, " +
+            "IFNULL(sum(mfp.CHARGED_FEES), 0) + IFNULL(sum(mfp.CHARGED_TAXES), 0) - (IFNULL(sum(mfp.REFUNDED_FEES), 0) + " +
+            "IFNULL(sum(mfp.REFUNDED_TAXES), 0)) AS total, mi.FOLIO AS folio, SUBSTRING(m.CURRENCIES , 1, 3) divisa " +
+            "FROM MONTHLY_FEE_PAYMENTS mfp INNER JOIN MERCHANTS m ON mfp.ID_MERCHANT = m.ID_MERCHANT " +
+            "LEFT JOIN MERCHANTS_INVOICES mi ON (mi.ID_MERCHANT_INVOICE = mfp.ID_MERCHANT_INVOICE " +
+            "AND mi.YEAR = :year AND mi.MONTH = :month AND m.country = ':country' AND mi.IS_PPD = 1 " +
+            "AND mi.IS_REVERSED IN (0, 1) AND mi.INVOICE_TYPE IN ('INDIVIDUAL_ADJUSTMENT', 'FEES_TO_CHARGE', 'CHARGED_FEES', 'CREDIT_NOTE')) " +
+            "LEFT JOIN MERCHANTS_INFO mi2 ON mi2.ID_MERCHANT = m.ID_MERCHANT AND m.ID_MERCHANT_INFO = mi2.ID_MERCHANT_INFO WHERE mfp.`YEAR` = :year " +
+            "AND mfp.`MONTH` = :month :merchant AND mfp.PAID IN(:status) AND mfp.type IN ('FEES', 'CFDI_FEES', 'MANUAL') " +
+            "GROUP BY mfp.`YEAR`, mfp.`MONTH`, mfp.ID_MERCHANT";
+
+    public static final String MERCHANTS_TF_INNER = " INNER JOIN MERCHANTS AS M ON TF.ID_MERCHANT = M.ID_MERCHANT ";
+    public static final String TRANSACTION_DATE_AND_ID_ORDER = " ORDER BY T.DATE DESC, T.ID_TRANSACTION DESC";
+
+    public static final String TRANSACTION_FEES_CHARGED_QUERY = " SELECT "
+          + " T.ID AS transaction_id, "
+          + " T.DATE AS creation_date,"
+          + " TP.CATEGORY AS category,"
+          + " T.AMOUNT AS amount,"
+          + " TF.AMOUNT AS fee,"
+          + " TF.TAX AS tax"
+          + " FROM TRANSACTIONS_FEES AS TF "
+          + " INNER JOIN TRANSACTIONS AS T ON TF.ID_TRANSACTION = T.ID_TRANSACTION"
+          + " INNER JOIN TRANSACTIONS_TYPES AS TP ON T.ID_TRANSACTION_TYPE = TP.ID_TRANSACTION_TYPE"
+          + MERCHANTS_TF_INNER
+          + " INNER JOIN TRANSACTIONS AS T2 ON TF.ID_TRANSACTION_PAYMENT = T2.ID_TRANSACTION "
+          + " WHERE (YEAR(T2.DATE) = :year AND MONTH(T2.DATE) = :month)"
+          + " AND M.ID = ':merchantId'"
+          + TRANSACTION_DATE_AND_ID_ORDER;
+
+    public static final String TRANSACTION_MONTHLY_OUT_QUERY = " SELECT"
+          + " T.ID AS transaction_id, "
+          + " T.DATE AS creation_date,"
+          + " TP.CATEGORY AS category,"
+          + " T.AMOUNT AS amount,"
+          + " TF.AMOUNT AS fee,"
+          + " TF.TAX AS tax"
+          + " FROM TRANSACTIONS_FEES AS TF "
+          + " INNER JOIN TRANSACTIONS AS T ON TF.ID_TRANSACTION = T.ID_TRANSACTION"
+          + " INNER JOIN TRANSACTIONS_TYPES AS TP ON T.ID_TRANSACTION_TYPE = TP.ID_TRANSACTION_TYPE"
+          + MERCHANTS_TF_INNER
+          + " WHERE (TF.ID_MONTHLY_FEE_PAYMENT = :monthlyId AND M.ID = ':merchantId')"
+          + TRANSACTION_DATE_AND_ID_ORDER;
+
+    public static final String COMMISSIONS_RETURNED_WITH_MONTHLY_QUERY = "SELECT "
+            + " :transactionIdColumn, "
+            + " T.DATE AS creation_date , "
+            + " :transactionCategory, "
+            + " T.AMOUNT AS amount, "
+            + " TF.AMOUNT AS fee, "
+            + " :transactionTax "
+            + " FROM TRANSACTIONS_FEES as TF "
+            + " INNER JOIN TRANSACTIONS AS T ON TF.ID_TRANSACTION = T.ID_TRANSACTION "
+            + " :joinToTransactionType"
+            + MERCHANTS_TF_INNER
+            + " LEFT OUTER JOIN CUSTOMERS AS C ON T.ID_CUSTOMER = C.ID_CUSTOMER "
+            + " LEFT OUTER JOIN TRANSACTIONS AS T2 ON T.ID_TRANSACTION_CANCELLED_BY = T2.ID_TRANSACTION "
+            + " WHERE (TF.ID_MONTHLY_FEE_PAYMENT_REFUND = :monthlyId AND M.ID = ':merchantId') "
+            + TRANSACTION_DATE_AND_ID_ORDER;
+
+    public static final String COMMISSIONS_RETURNED_IN_QUERY = "SELECT "
+            + " :transactionIdColumn, "
+            + " T.DATE AS creation_date, "
+            + " :transactionCategory, "
+            + " T.AMOUNT AS amount, "
+            + " TF.AMOUNT AS fee, "
+            + " :transactionTax"
+            + " FROM TRANSACTIONS_FEES as TF "
+            + " INNER JOIN TRANSACTIONS AS T ON TF.ID_TRANSACTION = T.ID_TRANSACTION "
+            + " :joinToTransactionType"
+            + MERCHANTS_TF_INNER
+            + " LEFT OUTER JOIN CUSTOMERS AS C ON T.ID_CUSTOMER = C.ID_CUSTOMER "
+            + " LEFT OUTER JOIN TRANSACTIONS T2 ON T.ID_TRANSACTION_CANCELLED_BY = T2.ID_TRANSACTION"
+            + " INNER JOIN TRANSACTIONS AS T3 ON TF.ID_TRANSACTION_REFUND = T3.ID_TRANSACTION "
+            + " WHERE (YEAR(T3.DATE) = :year AND MONTH(T3.DATE) = :month) "
+            + " AND M.ID = ':merchantId' "
+            + TRANSACTION_DATE_AND_ID_ORDER;
+
+    public static final String QUERY_MONTHLY_CHARGE_MERCHANT = "AND m.ID = ':merchantId'";
+    public static final String QUERY_TRANSACTION_ID = "T.ID AS transaction_id";
+    public static final String QUERY_CATEGORY = "TP.CATEGORY AS category";
+    public static final String QUERY_TAX = "TF.TAX AS tax";
+    public static final String QUERY_JOIN_TO_TRANSACTION_TYPE = "INNER JOIN TRANSACTIONS_TYPES AS TP ON T.ID_TRANSACTION_TYPE = TP.ID_TRANSACTION_TYPE";
+    public static final String COUNTRY_PARAM = ":country";
+    public static final String MERCHANT_ID_PARAM = ":merchantId";
+    public static final String MONTH_PARAM = ":month";
+    public static final String MONTHLY_ID_PARAM = ":monthlyId";
+    public static final String STATUS_PARAM = ":status";
+    public static final String YEAR_PARAM = ":year";
+    public static final String TRANSACTION_ID_COLUMN = ":transactionIdColumn";
+    public static final String TRANSACTION_CATEGORY_COLUMN = ":transactionCategory";
+    public static final String TAX_COLUMN = ":transactionTax";
+    public static final String JOIN_TO_TRANSACTION_TYPES = ":joinToTransactionType";
+
+
+
+    public static final List<String> QUERY_MONTHLY_CHARGE_PARAMS = Collections.unmodifiableList(Arrays.asList(YEAR_PARAM, MONTH_PARAM, COUNTRY_PARAM, MERCHANT_ID_PARAM, STATUS_PARAM));
+    public static final List<String> TRANSACTION_FEES_CHARGED_PARAMS = Collections.unmodifiableList(Arrays.asList(MERCHANT_ID_PARAM, YEAR_PARAM, MONTH_PARAM));
+    public static final List<String> TRANSACTION_FEES_RETURNED_PARAMS = Collections.unmodifiableList(Arrays.asList(MERCHANT_ID_PARAM, YEAR_PARAM, MONTH_PARAM, TRANSACTION_ID_COLUMN, TRANSACTION_CATEGORY_COLUMN, TAX_COLUMN, JOIN_TO_TRANSACTION_TYPES));
+    public static final List<String> TRANSACTION_MONTHLY_OUT_PARAMS = Collections.unmodifiableList(Arrays.asList(MONTHLY_ID_PARAM, MERCHANT_ID_PARAM));
+    public static final List<String> TRANSACTION_MONTHLY_RETURNED_PARAMS = Collections.unmodifiableList(Arrays.asList(MONTHLY_ID_PARAM, MERCHANT_ID_PARAM, TRANSACTION_ID_COLUMN, TRANSACTION_CATEGORY_COLUMN, TAX_COLUMN, JOIN_TO_TRANSACTION_TYPES));
+
+    private ReportServiceClientConstants(){}
+}

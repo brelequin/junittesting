@@ -1,0 +1,105 @@
+package com.brelequin.pruebadeconceptos.model;
+
+import java.util.List;
+
+public class RequestReporter {
+	////required//////////
+	private String keycodeBd;
+	private String pluginName;
+	//private Filter filter;
+	private String queryStatement;
+	private String applicationCode;
+	private String fileType;
+	private String separator;
+	private S3CredentialRequest s3CredentialRequest;
+	private String email;
+	private String merchantId;
+	
+	////not required/////
+	private List<MailCredentialRequest> mailCredentialRequest;
+	private String titleTemplate;
+	private String descriptionTemplate;
+	private String footerTemplateText;
+	public String getKeycodeBd() {
+		return keycodeBd;
+	}
+	public void setKeycodeBd(String keycodeBd) {
+		this.keycodeBd = keycodeBd;
+	}
+	public String getPluginName() {
+		return pluginName;
+	}
+	public void setPluginName(String pluginName) {
+		this.pluginName = pluginName;
+	}
+	public String getQueryStatement() {
+		return queryStatement;
+	}
+	public void setQueryStatement(String queryStatement) {
+		this.queryStatement = queryStatement;
+	}
+	public String getApplicationCode() {
+		return applicationCode;
+	}
+	public void setApplicationCode(String applicationCode) {
+		this.applicationCode = applicationCode;
+	}
+	public String getFileType() {
+		return fileType;
+	}
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+	public String getSeparator() {
+		return separator;
+	}
+	public void setSeparator(String separator) {
+		this.separator = separator;
+	}
+	public S3CredentialRequest getS3CredentialRequest() {
+		return s3CredentialRequest;
+	}
+	public void setS3CredentialRequest(S3CredentialRequest s3CredentialRequest) {
+		this.s3CredentialRequest = s3CredentialRequest;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getMerchantId() {
+		return merchantId;
+	}
+	public void setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+	}
+	public List<MailCredentialRequest> getMailCredentialRequest() {
+		return mailCredentialRequest;
+	}
+	public void setMailCredentialRequest(List<MailCredentialRequest> mailCredentialRequest) {
+		this.mailCredentialRequest = mailCredentialRequest;
+	}
+	public String getTitleTemplate() {
+		return titleTemplate;
+	}
+	public void setTitleTemplate(String titleTemplate) {
+		this.titleTemplate = titleTemplate;
+	}
+	public String getDescriptionTemplate() {
+		return descriptionTemplate;
+	}
+	public void setDescriptionTemplate(String descriptionTemplate) {
+		this.descriptionTemplate = descriptionTemplate;
+	}
+	public String getFooterTemplateText() {
+		return footerTemplateText;
+	}
+	public void setFooterTemplateText(String footerTemplateText) {
+		this.footerTemplateText = footerTemplateText;
+	}
+	
+	
+	
+	
+}

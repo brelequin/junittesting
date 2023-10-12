@@ -1,0 +1,44 @@
+package com.brelequin.pruebadeconceptos.services;
+
+import java.util.AbstractMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import mx.openpay.payments.report.dto.CountryConfigDTO;
+
+//import lombok.extern.slf4j.Slf4j;
+
+//@Slf4j
+//@Singleton
+public class CountryConfigService {
+
+    private static final Map<String, String> REPORTER_SERVICE_DBS = Stream.of(
+                    new AbstractMap.SimpleImmutableEntry<>("MEX", "mx-co"),
+                    new AbstractMap.SimpleImmutableEntry<>("PER", "per"),
+                    new AbstractMap.SimpleImmutableEntry<>("COL", "mx-co"),
+                    new AbstractMap.SimpleImmutableEntry<>("ARG", "arg"))
+            .collect(Collectors.toMap(AbstractMap.SimpleImmutableEntry::getKey,
+                    AbstractMap.SimpleImmutableEntry::getValue));
+
+    private static final Map<String, String> MAIL_SERVER_PREFIXES = Stream.of(
+                    new AbstractMap.SimpleImmutableEntry<>("MEX", "mx"),
+                    new AbstractMap.SimpleImmutableEntry<>("PER", "pe"),
+                    new AbstractMap.SimpleImmutableEntry<>("COL", "co"),
+                    new AbstractMap.SimpleImmutableEntry<>("ARG", "ar"))
+            .collect(Collectors.toMap(AbstractMap.SimpleImmutableEntry::getKey,
+                    AbstractMap.SimpleImmutableEntry::getValue));
+
+    private static final Map<String, String> TIMEZONES = Stream.of(
+                    new AbstractMap.SimpleImmutableEntry<>("MEX", "America/Mexico_City"),
+                    new AbstractMap.SimpleImmutableEntry<>("PER", "America/Lima"),
+                    new AbstractMap.SimpleImmutableEntry<>("COL", "America/Bogota"),
+                    new AbstractMap.SimpleImmutableEntry<>("ARG", "America/Buenos_Aires"))
+            .collect(Collectors.toMap(AbstractMap.SimpleImmutableEntry::getKey,
+                    AbstractMap.SimpleImmutableEntry::getValue));
+
+    public CountryConfigDTO getCountryConfig(String country){
+        return new CountryConfigDTO(REPORTER_SERVICE_DBS.get(country), MAIL_SERVER_PREFIXES.get(country), TIMEZONES.get(country));
+    }
+}
+

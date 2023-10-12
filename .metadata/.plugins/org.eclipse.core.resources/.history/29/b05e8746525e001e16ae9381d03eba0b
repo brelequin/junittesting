@@ -1,0 +1,6 @@
+logging.level.web=debug
+logging.level.org.springframework=debug
+server.port=8081
+#Convierte los json que tienen _ en objetos sin espacios
+spring.jackson.property-naming-strategy=SNAKE_CASE
+

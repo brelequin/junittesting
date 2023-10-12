@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="PaymentReportServiceTest" project="paymentreport" tests="1" started="1" failures="0" errors="0" ignored="0">
+  <testsuite name="mx.openpay.paymentreport.PaymentReportServiceTest" time="1.561" displayname="PaymentReportServiceTest" uniqueid="[engine:junit-jupiter]/[class:mx.openpay.paymentreport.PaymentReportServiceTest]">
+    <testcase name="test_generateDynamicReport" classname="mx.openpay.paymentreport.PaymentReportServiceTest" time="1.561" displayname="test_generateDynamicReport()" uniqueid="[engine:junit-jupiter]/[class:mx.openpay.paymentreport.PaymentReportServiceTest]/[method:test_generateDynamicReport()]"/>
+  </testsuite>
+</testrun>
